@@ -1,33 +1,42 @@
-const http = require('http');
-const fs = require('fs');
+// const http = require('http');
+// const routes = require('./routes');
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+// const handlebars = require('express-handlebars');
 
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-const server = http.createServer((req, res) => {
-    const url = req.url;
-    const method = req.method;
+const app = express();
+// app.engine('hbs', handlebars({
+//     layoutsDir: 'views/layout/',
+//      defaultLayout: 'main-layout', 
+//      extname: 'hbs'
+//     }));
+// app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
+// app.set('view engine', 'pug');
+// app.set('view engine', 'pug');
+// app.set('views', 'views');
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.static(path.join(__dirname, 'public')))
 
-    if(url==='/'){
-        res.setHeader('Content-Type', 'text/html');
-        res.write('<html>');
-        res.write('<head><title>Enter Message</title></head>');
-        res.write('<body><form action="/message" method="POST"><input type="text" name="message" ><button type="submit">Send</button><form></body>');
-        res.write('</html>');
-        return res.end();
-    }
+// Creating a NodeJS Server
+// Needs a "requestListener" (anonymous function inside of it)
+// Then, you need to storage that server to use the "listen" method
+// const server = http.createServer(routes.handler);
+// By default, uses the 80 port at production
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
 
-    if(url==='/message' && method==='POST'){
-        fs.writeFileSync('message.txt', 'DUMMY TEXT');
-        res.statusCode = 302;
-        res.setHeader('Location', '/');
-        return res.end();
-    }
-
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<html>');
-    res.write('<head><title>My first page</title></head>');
-    res.write('<body><h1>Hello from my NODE JS server</h1></body>');
-    res.write('</html>');
-    res.end();
+app.use((req, res, next) => {
+    // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+    res.status(404).render('404', {
+        docTitle: 'Page not found'
+    });
 });
 
-server.listen(3000);
+// const server = http.createServer(app);
+// server.listen(3000);
+app.listen(3000);
