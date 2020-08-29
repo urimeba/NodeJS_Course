@@ -1,29 +1,18 @@
-const path = require('path');
+// const path = require('path');
+// const rootDir = require('../util/path');
 const express = require('express');
 const router = express.Router();
+const adminController = require('../controllers/admin');
 
-const products = [];
+router.get('/add-product', adminController.getAddProduct);
+router.get('/products', adminController.getProducts);   
+router.post('/add-product', adminController.postAddProduct);
+router.get('/edit-product/:productId', adminController.getEditProduct);
+router.post('/edit-product', adminController.postEditProduct);
+router.post('/delete-product', adminController.postDeleteProduct);
 
-const rootDir = require('../util/path');
 
-router.get('/add-product', (req, res, next) => {
-    // res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
-    // res.send('<form action="/admin/add-product" method="POST"><input type="text" name="title"><button type="submit">Add product</button></form>');
-    res.render('add-product', {
-        docTitle: 'Add product',
-        path: '/admin/add-product',
-        activeAddProduct: true,
-        formCSS: true,
-        productCSS: true
-    })
-});
 
-// Receiving only POST request
-router.post('/add-product', (req, res, next) => {
-    products.push({title: req.body.title});
-    // Redirecting to Index
-    res.redirect('/');
-});
+module.exports = router;
+// exports.products = products;
 
-exports.routes = router;
-exports.products = products;

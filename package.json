@@ -26,5 +26,11 @@
     "express": "^4.17.1",
     "express-handlebars": "^3.0.2",
     "pug": "^3.0.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/products.json",
+      "data/cart.json"
+    ]
   }
 }
