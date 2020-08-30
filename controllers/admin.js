@@ -22,22 +22,27 @@ exports.postAddProduct = (req, res, next) => {
     const description = req.body.description;
     const product = new Product(
         null, title, imageUrl, description, price
-        );
-    product.save();
-    res.redirect('/');
+    );
+    // product.save();
+    product.save()
+    .then(() => {
+        res.redirect('/');
+    })
+    .catch(err => {console.log(err);});
+    
 };
 
 exports.getEditProduct = (req, res, next) => {
     // res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
     // res.send('<form action="/admin/add-product" method="POST"><input type="text" name="title"><button type="submit">Add product</button></form>');
     const editMode = req.query.edit;
-    if(!editMode){
+    if (!editMode) {
         return res.redirect('/');
     }
     const prodId = req.params.productId;
     Product.findById(prodId, product => {
 
-        if(!product){
+        if (!product) {
             return res.redirect('/');
         }
 
